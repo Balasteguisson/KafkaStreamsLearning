@@ -34,11 +34,11 @@ public class BalanceProducer {
         KafkaProducer<String, String> balanceProducer = new KafkaProducer<>(producerProperties);
 
         //loop to generate 10 records per second
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 100; i++) {
             ProducerRecord<String, String> balanceRecord = new ProducerRecord<String,String>(recordsTopic, createBalanceRegister());     
             try {
                 balanceProducer.send(balanceRecord);
-                Thread.sleep(100);
+                Thread.sleep(10);
             } catch (Exception e) {
                 e.printStackTrace();
             }

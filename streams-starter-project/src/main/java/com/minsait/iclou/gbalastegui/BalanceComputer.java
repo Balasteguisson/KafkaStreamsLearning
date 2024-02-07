@@ -20,40 +20,47 @@ import org.json.JSONObject;
 public class BalanceComputer {
     public static void main(String[] args) {
         
-        Initializer<String> balanceInitializer = String::new;
+        JSONObject jsonInitializer = new JSONObject();
+        jsonInitializer.put("amount", 0);
+        jsonInitializer.put("time", "0001-01-01T00:00:01.000");
+
+
+        Initializer<String> balanceInitializer = () -> jsonInitializer.toString();
 
         Aggregator<String, String, String> balanceAggregator = (key, value, aggregate) -> {
             String newTotal;
-
+            
             //we turn the value and aggregate strings into a json object so we can opperate
             JSONObject inputRegister = new JSONObject(value);
             JSONObject totalAggregate = new JSONObject(aggregate);
-
+            
             //obtain the values we want to work with
             //ofc this can be done shorter directly in the newRegister definition
             String inputDate = inputRegister.getString("time");
             String totalDate = totalAggregate.getString("time");
             int inputAmount = inputRegister.getInt("amount");
             int accumulatedAmount = totalAggregate.getInt("amount");
-
+            
             int newAmount = inputAmount + accumulatedAmount;
             
-            //we take the newest date from the value and the aggregate
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-mm-dd'T'HH:mm:ss");
+            //we take the newest date from the value and the aggregate - this part is commented due to a error caused by the date format, is not the main objective of the exercise
+            /*
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
             LocalDateTime formatedInputDate = LocalDateTime.parse(inputDate, formatter);
             LocalDateTime formatedTotalDate = LocalDateTime.parse(totalDate, formatter);
 
             LocalDateTime formatedNewDate = (formatedInputDate.compareTo(formatedTotalDate) >=0) ? formatedInputDate : formatedTotalDate;
             
             String newDate = formatedNewDate.format(formatter);
+            */
+
             //we form the json object we want to return and put this into string format
             JSONObject newRegister = new JSONObject();
             newRegister.put("amount", newAmount);
-            newRegister.put("time", newDate);
+            newRegister.put("time", inputDate);
             
             newTotal = newRegister.toString();
             
-            System.out.println("Procesado de sumatorio, devolviendo valor");
             return newTotal;
         };
 
