@@ -61,7 +61,6 @@ public class FavouriteColorPractice {
         streams.start();
         System.out.println(streams.toString());
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
-       
 
 
     }
